@@ -1,0 +1,31 @@
+services:
+  postgres:
+    container_name: snippet-vault-postgres
+    image: postgres:16-alpine
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    container_name: snippet-vault-api
+    build:
+      context: .
+      target: dev
+    env_file: .env
+    volumes:
+      - .:/app
+      - venv:/app/.venv
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  venv:
