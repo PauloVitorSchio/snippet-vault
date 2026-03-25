@@ -40,3 +40,19 @@ docker-compose exec api pytest
 ```bash
 curl http://localhost:8000/health/
 ```
+
+## Error response format
+
+All API errors return a consistent JSON envelope:
+
+```json
+{
+  "error": {
+    "code": "validation_error",
+    "message": "Validation error",
+    "details": {
+      "field_name": ["This field is required."]
+    }
+  }
+}
+```

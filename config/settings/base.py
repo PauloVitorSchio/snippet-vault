@@ -17,6 +17,10 @@ INSTALLED_APPS = [
     "rest_framework",
     # Local
     "users",
+    "snippets",
+    "tags",
+    "stars",
+    "snippet_collections.apps.CollectionsConfig",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -89,6 +93,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",
     ],
+    "EXCEPTION_HANDLER": "config.api.exceptions.custom_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
 }
