@@ -1,7 +1,29 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.10
+    rev: v0.15.7
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: [--fix]
       - id: ruff-format
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.4
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml]
+        additional_dependencies: ["bandit[toml]"]
+
+  - repo: local
+    hooks:
+      - id: safety
+        name: safety (dependency scan)
+        language: system
+        entry: bash -c "uv export --frozen --format requirements-txt --all-groups | uv run safety check --stdin --short-report -i 51358"
+        pass_filenames: false
+
+      - id: pytest-coverage
+        name: pytest (coverage)
+        language: system
+        entry: bash -c "uv run pytest --cov --cov-report=term-missing -q"
+        pass_filenames: false
+        stages: [manual]
