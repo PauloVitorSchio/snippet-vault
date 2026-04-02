@@ -17,7 +17,7 @@ class TestUserManager:
 
     def test_create_user_normalizes_email(self):
         user = User.objects.create_user(email="User@EXAMPLE.COM", password="pass1234!")
-        assert user.email == "User@example.com"
+        assert user.email == "user@example.com"
 
     def test_create_user_requires_email(self):
         with pytest.raises(ValueError, match="Email address is required"):

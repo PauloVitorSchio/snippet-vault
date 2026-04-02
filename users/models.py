@@ -3,6 +3,11 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
+    def normalize_email(self, email):
+        if email is None:
+            email = ""
+        return email.strip().lower()
+
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Email address is required.")
@@ -37,6 +42,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    def save(self, *args, **kwargs):
+        if self.email:
+            self.email = type(self).objects.normalize_email(self.email)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email
